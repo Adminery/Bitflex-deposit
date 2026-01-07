@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>BitFlex | Secure Deposit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+
+<style>
+:root{
+  --bg:#0b0c10;
+  --glass:rgba(255,255,255,.08);
+  --gold:#e2ad1c;
+  --green:#2cff6b;
+  --red:#ff4d6d;
+  --orange:#ffc107;
+}
+*{box-sizing:border-box;font-family:'Vazirmatn';margin:0;padding:0}
+
+body{
+  background:radial-gradient(circle at top,#1f2833,#0b0c10);
+  min-height:100vh;
+  color:#fff;
+  padding:25px;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,140,0,.15),transparent 40%),
+    radial-gradient(circle at 80% 90%,rgba(44,255,107,.12),transparent 40%);
+  animation:bgMove 12s infinite alternate;
+  z-index:-1;
+}
+@keyframes bgMove{
+  from{transform:translateY(0)}
+  to{transform:translateY(-40px)}
+}
+
+.container{max-width:520px;margin:auto}
+
+header{
+  display:flex;align-items:center;gap:15px;margin-bottom:25px
+}
+.logo{
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,#ffb347,#ff8c00);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:22px;
+}
+h1{color:var(--gold)}
+
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  border-radius:26px;
+  padding:26px;
+  border:1px solid rgba(255,255,255,.15);
+}
+
+/* result text */
+.result-text{
+  display:none;
+  text-align:center;
+  font-size:20px;
+  font-weight:900;
+  margin-bottom:14px;
+}
+.result-text.success{color:var(--green)}
+.result-text.error{color:var(--red)}
+
+/* crypto card */
+.crypto-card{
+  background:linear-gradient(135deg,#ffb347,#ff8c00);
+  border-radius:22px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 25px 60px rgba(0,0,0,.4);
+  transition:.5s;
+  position:relative;
+  overflow:hidden;
+}
+.crypto-card:hover{
+  transform:rotateY(8deg) rotateX(6deg) scale(1.03);
+}
+.crypto-card::after{
+  content:"";
+  position:absolute;
+  inset:-50%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);
+  transform:rotate(25deg);
+  animation:shine 4s infinite;
+}
+@keyframes shine{
+  from{transform:translateX(-100%) rotate(25deg)}
+  to{transform:translateX(100%) rotate(25deg)}
+}
+.crypto-card small{opacity:.9}
+.crypto-card h2{margin:10px 0}
+
+/* timeline */
+.timeline{
+  display:flex;justify-content:space-between;
+  font-size:12px;margin:18px 0;
+}
+.timeline div{flex:1;text-align:center;opacity:.35}
+.timeline .done{opacity:1;color:var(--green)}
+.timeline .active{opacity:1;color:var(--orange)}
+
+/* crypto buttons */
+.crypto{
+  background:rgba(255,255,255,.06);
+  padding:14px 18px;
+  border-radius:18px;
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:.3s;
+}
+.crypto:hover{background:rgba(255,255,255,.12)}
+
+select,input,button{
+  width:100%;
+  margin-top:12px;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+}
+select,input{
+  background:rgba(255,255,255,.08);
+  color:#fff;
+}
+button{
+  background:linear-gradient(135deg,#ff8c00,#ffb347);
+  font-weight:800;
+  cursor:pointer;
+}
+
+.address{
+  background:rgba(255,255,255,.08);
+  padding:14px;
+  border-radius:14px;
+  margin-top:14px;
+  text-align:center;
+  white-space:pre-line;
+  cursor:pointer;
+  display:none;
+}
+
+.qr{display:flex;justify-content:center;margin-top:15px}
+.status{text-align:center;margin-top:12px;font-weight:800}
+
+.note{
+  margin-top:18px;
+  font-size:13px;
+  opacity:.8;
+  line-height:1.8;
+}
+
+/* toast */
+.toast{
+  position:fixed;
+  top:25px;
+  right:50%;
+  transform:translateX(50%);
+  background:rgba(20,20,20,.9);
+  backdrop-filter:blur(15px);
+  padding:16px 22px;
+  border-radius:18px;
+  font-weight:800;
+  display:none;
+  z-index:999;
+  animation:drop .6s;
+}
+.toast.success{color:var(--green);border:1px solid var(--green)}
+.toast.error{color:var(--red);border:1px solid var(--red)}
+@keyframes drop{
+  from{opacity:0;transform:translate(50%,-20px)}
+  to{opacity:1;transform:translate(50%,0)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<header>
+  <div class="logo">B</div>
+  <h1>BitFlex</h1>
+</header>
+
+<div class="card">
+
+<div id="resultText" class="result-text"></div>
+
+<div class="crypto-card">
+  <small id="cardNetwork">—</small>
+  <h2 id="cardCrypto">انتخاب ارز</h2>
+  <div id="cardAmount">0.00</div>
+</div>
+
+<div class="timeline">
+  <div class="done">ثبت درخواست</div>
+  <div class="active">انتظار واریز</div>
+  <div>بررسی ربات</div>
+  <div>تأیید نهایی</div>
+</div>
+
+<div class="crypto" onclick="selectCrypto('BTC')">Bitcoin (BEP20)</div>
+<div class="crypto" onclick="selectCrypto('ETH')">Ethereum (BEP20)</div>
+<div class="crypto" onclick="selectCrypto('USDT')">USDT</div>
+
+<select id="network" style="display:none">
+  <option value="TRC20">TRC20</option>
+  <option value="BEP20">BEP20</option>
+</select>
+
+<input type="number" id="amount" placeholder="مقدار واریز">
+
+<button onclick="submitDeposit()">ثبت درخواست واریز</button>
+
+<div class="address" id="addrBox" onclick="copyAddr()"></div>
+<div class="qr" id="qr"></div>
+<div class="status" id="status"></div>
+
+<div class="note">
+پس از واریز، درخواست شما توسط ربات بررسی شده  
+و نتیجه تأیید یا رد فقط برای شما نمایش داده می‌شود.
+</div>
+
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+let crypto=null;
+let socket = io('http://localhost:5000'); // سرور وب‌سوکت شما
+
+const ADDR={
+ USDT:{
+  TRC20:'TDAmj12GUxAMfNnuTUSwMG3f6mh83x1BBm',
+  BEP20:'0x726146c21d24f02456afc1963c88c068920f6b1c'
+ },
+ BTC:'0x726146c21d24f02456afc1963c88c068920f6b1c',
+ ETH:'0x726146c21d24f02456afc1963c88c068920f6b1c'
+};
+
+function selectCrypto(c){
+ crypto=c;
+ cardCrypto.innerText=c;
+ network.style.display=c==='USDT'?'block':'none';
+}
+
+function submitDeposit(){
+ const amt=amount.value;
+ if(!crypto||!amt){showToast('اطلاعات ناقص','error');return}
+
+ let net='BEP20',addr='';
+ if(crypto==='USDT'){net=network.value;addr=ADDR.USDT[net]}
+ else addr=ADDR[crypto];
+
+ const deposit_id = Date.now() + '_' + Math.floor(Math.random()*1000); // ID منحصر به فرد
+
+ cardAmount.innerText=amt;
+ cardNetwork.innerText=net;
+
+ addrBox.style.display='block';
+ addrBox.innerText=`آدرس واریز:\n${addr}\n(کلیک برای کپی)`;
+
+ qr.innerHTML='';
+ new QRCode(qr,{text:addr,width:140,height:140});
+
+ status.innerHTML='⏳ در انتظار تأیید';
+ status.style.color='var(--orange)';
+
+ // ارسال به سرور/ربات
+ socket.emit('new_deposit',{
+  deposit_id:deposit_id,
+  crypto:crypto,
+  network:net,
+  amount:amt,
+  addr:addr
+ });
+
+ showToast('درخواست ثبت شد','success');
+}
+
+socket.on('deposit_result',data=>{
+ if(data.deposit_id && data.user_id === socket.id){
+  if(data.status==='success') applyResult('success');
+  if(data.status==='failed') applyResult('failed');
+ }
+});
+
+function applyResult(type){
+ const r=resultText;
+ r.style.display='block';
+ if(type==='success'){
+  r.className='result-text success';
+  r.innerText='واریز با موفقیت انجام شد';
+  showToast('واریز تأیید شد','success');
+ }
+ if(type==='failed'){
+  r.className='result-text error';
+  r.innerText='واریز رد شد';
+  showToast('واریز ناموفق بود','error');
+ }
+}
+
+function showToast(msg,type){
+ const t=toast;
+ t.className=`toast ${type}`;
+ t.innerText=msg;
+ t.style.display='block';
+ setTimeout(()=>t.style.display='none',4000);
+}
+
+function copyAddr(){
+ navigator.clipboard.writeText(addrBox.innerText.split('\n')[1]);
+ showToast('آدرس کپی شد','success');
+}
+</script>
+
+</body>
+</html>
