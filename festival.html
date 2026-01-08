@@ -1,0 +1,480 @@
+<DOCTYPE! html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitflex Grand Festival</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1b1b1b;
+  --card: rgba(255,255,255,0.06);
+  --glass: rgba(255,255,255,0.1);
+  --primary: #b5a66f; /* طلایی */
+  --secondary: #888;   /* خاکستری */
+  --accent: #ffd700;   /* Glow طلایی */
+  --text: #fff;
+  --shadow: rgba(255,215,0,0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family:'Inter', sans-serif;}
+body {
+  background: radial-gradient(circle at top,#121212,#1b1b1b);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ===== Header Hero ===== */
+header {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px;
+  position: relative;
+  overflow: hidden;
+}
+header::after{
+  content:"";
+  position:absolute;
+  width:200%;
+  height:200%;
+  background:radial-gradient(circle, rgba(255,215,0,0.15), transparent);
+  top:-50%; left:-50%;
+  animation: rotate 30s linear infinite;
+}
+@keyframes rotate{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
+.hero { max-width:900px; position:relative; z-index:2; }
+
+.badge {
+  display:inline-block;
+  padding:12px 24px;
+  border-radius:999px;
+  background: linear-gradient(90deg,var(--primary),var(--accent));
+  font-weight:700;
+  margin-bottom:25px;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+}
+
+h1 {
+  font-size:64px;
+  font-weight:900;
+  line-height:1.2;
+  margin-bottom:20px;
+  background: linear-gradient(90deg,var(--primary),var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeIn 2s ease forwards;
+}
+@keyframes fadeIn{
+  0%{opacity:0; transform:translateY(20px);}
+  100%{opacity:1; transform:translateY(0);}
+}
+
+p.lead {
+  font-size:20px;
+  opacity:0.85;
+  margin-bottom:40px;
+}
+
+.cta {
+  display:inline-flex;
+  gap:20px;
+  flex-wrap: wrap;
+  justify-content:center;
+}
+
+.btn {
+  padding:16px 36px;
+  border-radius:16px;
+  border:none;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.3s ease;
+  position:relative;
+  overflow:hidden;
+}
+.btn.primary {
+  background: linear-gradient(135deg,var(--primary),var(--accent));
+  color:#000;
+  box-shadow:0 0 20px var(--shadow);
+}
+.btn.primary:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 30px var(--shadow);
+}
+.btn.ghost{
+  background:transparent;
+  border:1px solid var(--glass);
+  color:#fff;
+}
+.btn.ghost:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 15px var(--accent);
+}
+
+/* Countdown */
+.countdown {
+  font-size:28px;
+  font-weight:700;
+  margin-top:20px;
+  color:var(--accent);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;}
+  50%{opacity:0.5;}
+}
+
+/* ===== Sections ===== */
+section {
+  padding:100px 8vw;
+  position:relative;
+}
+.section-title {
+  font-size:42px;
+  font-weight:800;
+  margin-bottom:20px;
+  background: linear-gradient(90deg,var(--primary),var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.section-sub {
+  opacity:0.7;
+  max-width:650px;
+  margin-bottom:50px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:30px;
+}
+
+.card {
+  background: linear-gradient(180deg,var(--card),transparent);
+  border:1px solid var(--glass);
+  border-radius:24px;
+  padding:30px;
+  backdrop-filter: blur(14px);
+  transition:0.5s ease;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+.card::after{
+  content:"";
+  position:absolute;
+  width:200%;
+  height:200%;
+  background:radial-gradient(circle,var(--accent),transparent);
+  top:-50%; left:-50%;
+  opacity:0.08;
+  transition:0.5s;
+}
+.card:hover{
+  transform:translateY(-10px) scale(1.05);
+  border-color: var(--accent);
+}
+.card:hover::after{
+  opacity:0.2;
+}
+.card h3{
+  font-size:24px;
+  margin-bottom:12px;
+}
+.card span{
+  font-size:48px;
+  font-weight:900;
+  color:var(--accent);
+}
+.card p, .card div{
+  font-size:16px;
+  opacity:0.85;
+}
+
+/* ===== Table ===== */
+.table-container {
+  overflow-x:auto;
+}
+.table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+.table th, .table td{
+  padding:12px 16px;
+  text-align:center;
+}
+.table th{
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+  color:#000;
+}
+.table tr{
+  transition:0.3s ease;
+}
+.table tr:hover{
+  background: rgba(255,215,0,0.1);
+  transform:scale(1.02);
+}
+
+/* Footer */
+footer{
+  padding:60px 8vw;
+  text-align:center;
+  opacity:0.5;
+  font-size:14px;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  h1{font-size:44px;}
+  section{padding:80px 6vw;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hero">
+    <div class="badge">🎉 Bitflex Grand Festival</div>
+    <h1>Real Cash Bonuses<br>Point-based Competitions<br>Price Prediction Game</h1>
+    <p class="lead">بونوس‌های نقدی واقعی • مسابقه امتیازی • بازی پیش‌بینی قیمت</p>
+    <div class="cta">
+     <!-- داخل <div class="cta"> -->
+<a href="deposit.html" target="_blank" rel="noopener noreferrer" class="btn primary">
+    Join Now / همین حالا بپیوندید
+  </a>
+  
+      <a href="#rewards" class="btn ghost" data-fa="View Rewards / مشاهده جوایز" data-en="View Rewards"></a>
+    </div>
+    <div class="countdown" id="countdown">Festival Starts In: 00:00:00</div>
+  </div>
+</header>
+
+<!-- REWARDS -->
+<section id="rewards">
+    <h2 data-fa="🎯 امتیازات و جوایز شما" data-en="🎯 Your Rewards & Points"></h2>
+    
+    <div class="card">
+    <table class="table">
+    <tr>
+    <th data-fa="نام کاربر" data-en="Username"></th>
+    <th data-fa="امتیاز" data-en="Points"></th>
+    </tr>
+    <tbody id="scoreTable"></tbody>
+    </table>
+    </div>
+    </section>
+
+    <script>
+        // Language
+        function setLang(lang){
+          document.querySelectorAll("[data-fa]").forEach(el=>{
+            el.innerText = el.dataset[lang]
+          })
+        }
+        setLang("fa")
+        
+        // Scores (Sample)
+          const users = [
+        {name: "adam bayker", points: 120},
+        {name: "shayan", points: 50},
+        {name: "sarah fernani", points: 0},
+        {name: "saied", points: 20}
+        ];
+        const table=document.getElementById("scoreTable")
+        users.forEach(u=>{
+          table.innerHTML+=`<tr><td>${u.name}</td><td>${u.points}</td></tr>`
+        })
+        
+        // FAQ
+        document.querySelectorAll(".faq-q").forEach(q=>{
+          q.onclick=()=>q.nextElementSibling.style.display=
+            q.nextElementSibling.style.display==="block"?"none":"block"
+        })
+        </script>
+        
+        </body>
+        </html>
+        
+<section>
+  <h2 class="section-title">💰 Staking Pools / استخرهای استیکینگ</h2>
+  <p class="section-sub">Lock small amounts, earn massive bonuses. Rewards are real and time-locked.<br>مقادیر کم واریز کنید و بونوس‌های بزرگ دریافت کنید. تمام جوایز واقعی و زمان‌بندی شده هستند.</p>
+  <div class="grid">
+    <div class="card"><h3>7 Days / ۷ روز</h3><span>+100 USDT</span><div>Stake: 10 USDT / واریز ۱۰ دلار</div></div>
+    <div class="card"><h3>14 Days / ۱۴ روز</h3><span>+150 USDT</span><div>Stake: 25 USDT / واریز ۲۵ دلار</div></div>
+    <div class="card"><h3>30 Days / ۳۰ روز</h3><span>+300 USDT</span><div>Stake: 50 USDT / واریز ۵۰ دلار</div></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">📊 Competition Points Table / جدول امتیازات</h2>
+  <p class="section-sub">Check your points for each activity. / امتیازهای هر فعالیت را مشاهده کنید.</p>
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr><th>Activity / فعالیت</th><th>Points / امتیاز</th><th>Description / توضیحات</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>First Deposit / اولین واریز</td><td>10</td><td>Initial deposit to start earning points / اولین واریز برای شروع امتیاز</td></tr>
+        <tr><td>Second Deposit / دومین واریز</td><td>20</td><td>Additional deposit to increase rewards / واریز دوم برای افزایش بونوس</td></tr>
+        <tr><td>Each Verified Referral / هر زیرمجموعه تأییدشده</td><td>30</td><td>Invite friends and earn points / دعوت دوستان و کسب امتیاز</td></tr>
+        <tr><td>14 Days Pool / استخر ۱۴ روزه</td><td>50</td><td>Stake 25 USDT for 14 days / واریز ۲۵ دلار برای ۱۴ روز</td></tr>
+        <tr><td>30 Days Pool / استخر ۳۰ روزه</td><td>150</td><td>Stake 50 USDT for 30 days / واریز ۵۰ دلار برای ۳۰ روز</td></tr>
+        <tr><td>Win in Bitflex Game / برد در بازی Bitflex</td><td>20</td><td>Correct prediction in the mini game / حدس درست در بازی</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">⚠️ Important Rules / قوانین مهم</h2>
+  <div class="grid">
+    <div class="card"><p>✔️ Each participant is allowed only one account.<br>✔️ هر فرد فقط یک حساب مجاز است.</p></div>
+    <div class="card"><p>✔️ Using bots or multiple accounts will result in account suspension and loss of funds.<br>✔️ استفاده از ربات یا چند اکانت باعث مسدودی حساب و از دست رفتن سرمایه می‌شود.</p></div>
+    <div class="card"><p>✔️ Bonuses are non-transferable.<br>✔️ بونوس‌ها غیرقابل انتقال هستند.</p></div>
+    <div class="card"><p>✔️ Bitflex Exchange rules are final and binding.<br>✔️ قوانین صرافی Bitflex قطعی و غیرقابل اعتراض هستند.</p></div>
+    <div class="card">
+        <p>
+          ✔️ Rewards are credited only after full verification.<br>
+          ✔️ جوایز فقط پس از تکمیل کامل احراز هویت به حساب کاربر اضافه می‌شوند.
+        </p>
+      </div>
+      
+      <div class="card">
+        <p>
+          ✔️ Any attempt to manipulate results will lead to permanent ban.<br>
+          ✔️ هرگونه تلاش برای دستکاری نتایج باعث مسدودی دائمی حساب خواهد شد.
+        </p>
+      </div>
+      
+      <div class="card">
+        <p>
+          ✔️ Bitflex reserves the right to modify festival terms if necessary.<br>
+          ✔️ صرافی Bitflex حق تغییر شرایط جشنواره را در صورت لزوم برای خود محفوظ می‌دارد.
+        </p>
+      </div>
+      
+    <div class="card"><p>✔️ Following all competition conditions increases your chance of winning.<br>✔️ رعایت تمام شرایط مسابقه شانس شما برای برنده شدن را افزایش می‌دهد.</p></div>
+  </div>
+
+
+</section>
+
+<section>
+  <h2 class="section-title">🎮 Bitflex Game / بازی Bitflex</h2>
+  <p class="section-sub">For more fun and higher points, run the Bitflex Game and go to the dedicated page.<br>برای لذت بیشتر و امتیاز بالاتر، بازی Bitflex را اجرا کرده و به صفحه جداگانه بروید.</p>
+  <div class="cta">
+    <a href="bitflex-game.html" class="btn primary">Play Game / بازی کنید</a>
+  </div>
+</section>
+
+<script>
+// Countdown Timer (10 روز بعد)
+let festivalDate = new Date();
+festivalDate.setDate(festivalDate.getDate() + 10);
+festivalDate.setHours(0,0,0,0);
+let countdownEl = document.getElementById("countdown");
+setInterval(() => {
+  let now = new Date();
+  let diff = festivalDate - now;
+  if(diff<0){ countdownEl.innerText="Festival Started! / جشنواره شروع شد!"; return;}
+  let d = Math.floor(diff/1000/60/60/24);
+  let h = Math.floor(diff/1000/60/60)%24;
+  let m = Math.floor(diff/1000/60)%60;
+  let s = Math.floor(diff/1000)%60;
+  countdownEl.innerText=`Festival Starts In: ${d}d ${h.toString().padStart(2,'0')}h:${m.toString().padStart(2,'0')}m:${s.toString().padStart(2,'0')}s / شروع جشنواره در: ${d} روز ${h.toString().padStart(2,'0')} ساعت ${m.toString().padStart(2,'0')} دقیقه ${s.toString().padStart(2,'0')} ثانیه`;
+},1000);
+</script>
+<section>
+  <h2 class="section-title">❓ سوالات متداول</h2>
+  <div class="grid">
+
+    <div class="card">
+      <h3 class="faq-q">آیا جوایز جشنواره واقعی هستند؟</h3>
+      <p class="faq-a">بله، تمامی جوایز به‌صورت واقعی و در قالب USDT پرداخت می‌شوند.</p>
+    </div>
+
+    <div class="card">
+      <h3 class="faq-q">بونوس‌ها چه زمانی آزاد می‌شوند؟</h3>
+      <p class="faq-a">پس از پایان دوره استیکینگ، بونوس‌ها به‌صورت خودکار فعال می‌شوند.</p>
+    </div>
+
+    <div class="card">
+      <h3 class="faq-q">آیا داشتن چند حساب مجاز است؟</h3>
+      <p class="faq-a">خیر، هر کاربر فقط مجاز به داشتن یک حساب است.</p>
+    </div>
+
+    <div class="card">
+      <h3 class="faq-q">چگونه امتیاز بیشتری بگیرم؟</h3>
+      <p class="faq-a">با واریز، دعوت دوستان و شرکت در بازی Bitflex امتیاز بیشتری دریافت می‌کنید.</p>
+    </div>
+
+    <div class="card">
+      <h3 class="faq-q">در صورت تقلب چه اتفاقی می‌افتد؟</h3>
+      <p class="faq-a">حساب کاربر مسدود شده و تمامی امتیازات حذف خواهد شد.</p>
+    </div>
+
+    <div class="card">
+      <h3 class="faq-q">آیا جشنواره زمان محدود دارد؟</h3>
+      <p class="faq-a">بله، این جشنواره فقط در بازه زمانی مشخص فعال است.</p>
+    </div>
+
+      <div class="card">
+        <h3 class="faq-q">بونوس‌ها چه زمانی قابل استفاده می‌شوند؟</h3>
+        <p class="faq-a">
+          پس از پایان دوره استیکینگ انتخاب‌شده، بونوس‌ها به‌صورت خودکار فعال و قابل استفاده خواهند بود.
+        </p>
+      </div>
+      
+      <div class="card">
+        <h3 class="faq-q">آیا امکان برداشت فوری جوایز وجود دارد؟</h3>
+        <p class="faq-a">
+          برداشت جوایز تنها پس از تکمیل کامل شرایط جشنواره و طبق قوانین Bitflex امکان‌پذیر است.
+        </p>
+      </div>
+      
+  </div>
+</section>
+
+
+<script>
+// FAQ toggle
+document.querySelectorAll(".faq-q").forEach(q=>{
+  q.onclick=()=>{
+    q.classList.toggle("active");
+    q.nextElementSibling.classList.toggle("show");
+  }
+});
+
+// Countdown
+let festivalDate=new Date();
+festivalDate.setDate(festivalDate.getDate()+10);
+setInterval(()=>{
+  let diff=festivalDate-new Date();
+  if(diff<0){countdown.innerText="جشنواره آغاز شد";return;}
+  let d=Math.floor(diff/86400000);
+  let h=Math.floor(diff/3600000)%24;
+  let m=Math.floor(diff/60000)%60;
+  let s=Math.floor(diff/1000)%60;
+  countdown.innerText=`شروع جشنواره: ${d} روز ${h}:${m}:${s}`;
+},1000);
+</script>
+      <footer>
+        © 2026 Bitflex Exchange · All rewards are real · Anti-Fraud Protected
+      </footer>
+    </footer>
+    
+</body>
+</html>
